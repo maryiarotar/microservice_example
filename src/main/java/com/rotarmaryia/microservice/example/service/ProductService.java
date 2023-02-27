@@ -5,10 +5,12 @@ import com.rotarmaryia.microservice.example.model.Product;
 import com.rotarmaryia.microservice.example.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +18,6 @@ public class ProductService {
 
     //@Autowired
     private final ProductRepository repository;
-
 
     public Product add(ProductDTO productDto){
         Product product = Product.builder()
@@ -26,10 +27,54 @@ public class ProductService {
         return repository.insert(product);
     }
 
+    public void addAll(List<ProductDTO> products){
+        List<Product> listToSave = new ArrayList<>();
+        for (ProductDTO prod : products) {
+            listToSave.add(Product.builder()
+                    .name(prod.getName())
+                    .description(prod.getDescription())
+                    .price(prod.getPrice()).build());
+        }
+        repository.insert(listToSave);
+    }
+
     public List<Product> getAll(){
         List<Product> list = repository.findAll();
         return list;
     }
 
+    public Product getById(long id){
+        Optional<Product> prod = repository.findById(id);
+        if (prod.isPresent()) { return prod.get();}
+        else return null;
+    }
+
+    public String update(Product product){
+        Optional<Product> oldProduct = repository.findById(product.getId());
+        if (oldProduct.isPresent()) {
+            repository.save(product);
+            return "obj with id [" + product.getId() + "] was updated. Updated rows: " +
+                    product.compareTo(oldProduct.get());
+        }
+        return "Can't update! Product is not exist in DB!";
+    }
+/*
+    public String updateAll(){
+
+    }
+
+    public void remove(Product product){
+
+    }
+
+    public void removeById(long id){
+
+    }
+
+    public void removeAll(Product product){
+
+    }
+
+ */
 
 }

@@ -18,7 +18,7 @@ public class ProductController {
     private ProductService service;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
+    @PostMapping("create")
     public void createProduct(@RequestBody ProductDTO productDto){
         service.add(productDto);
     }
@@ -29,12 +29,34 @@ public class ProductController {
         return service.getAll();
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<Product>> getAllProducts() {
-//        List<Product> list = service.getAll();
-//        return ResponseEntity.ok(list);
-//
-//    }
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value="/{id}")
+    public Product getProductById(@PathVariable("id") long id){
+        return service.getById(id);
+    }
+
+    @PostMapping("/edit")
+    @ResponseStatus(HttpStatus.OK)
+    public String updateProduct(@RequestBody Product product){
+        return service.update(product);
+    }
+
+    @PostMapping(value={"/edit/{id}"})
+    @ResponseStatus(HttpStatus.OK)
+    public String updateById(@PathVariable(value="id") Long id,
+                             @RequestParam(value="name", required=false) String name,
+                             @RequestParam(value="description", required=false) String description,
+                            @RequestParam(value="price", required=false) Double price){
+        Product old = service.getById(id);
+        Product newProd = old.toBuilder().build();
+        if (name != null) newProd.setName(name);
+        if (description != null) newProd.setDescription(description);
+        if (price != null) newProd.setPrice(price);
+        return service.update(newProd);
+    }
+
+
+
 
 
 
