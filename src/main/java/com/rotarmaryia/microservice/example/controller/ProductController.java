@@ -55,7 +55,13 @@ public class ProductController {
         return service.update(newProd);
     }
 
-
+    @PostMapping(value={"/remove/{id}", "/remove"})
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteById(@PathVariable("id") Long id){
+        if (id != null) {
+            service.removeById(id);
+        }
+    }
 
 
 

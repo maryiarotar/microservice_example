@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 import org.springframework.data.mongodb.core.mapping.event.BeforeConvertEvent;
 import org.springframework.stereotype.Component;
 
+/* class for generating Long id in Product mongo-collection */
 @Component
 public class ProductModelListener extends AbstractMongoEventListener<Product> {
 

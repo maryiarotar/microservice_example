@@ -58,23 +58,24 @@ public class ProductService {
         }
         return "Can't update! Product is not exist in DB!";
     }
-/*
-    public String updateAll(){
 
+    public String removeById(long id){
+        Optional<Product> product = repository.findById(id);
+        if (product.isPresent()){
+            repository.deleteById(id);
+            return "Product id={"+id+"} was deleted!";
+        }
+        return "Product id{"+id+"} was not found!";
     }
 
-    public void remove(Product product){
 
+    public String removeAll(){
+        if (repository.findAll().size() > 0) {
+            repository.deleteAll();
+            return "All products deleted!";
+        } else {
+            return "No products!";
+        }
     }
-
-    public void removeById(long id){
-
-    }
-
-    public void removeAll(Product product){
-
-    }
-
- */
 
 }
